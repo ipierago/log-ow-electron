@@ -2,13 +2,17 @@
   "name": "my-ow-electron",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "main.js",
   "scripts": {
-    "start": "electron main.js"
+    "start": "npx ow-electron main.js",
+    "pack": "npx ow-electron-builder --dir",
+    "dist": "npm ow-electron-builder"
   },
-  "author": "",
+  "author": "ian.pieragostini@gmail.com",
   "license": "ISC",
   "devDependencies": {
-    "electron": "^27.0.2"
+    "@overwolf/ow-electron": "^22.3.13",
+    "@overwolf/ow-electron-builder": "^23.6.2",
+    "@overwolf/ow-electron-packages-types": "^0.0.5"
   }
 }
