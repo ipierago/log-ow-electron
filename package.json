@@ -6,12 +6,15 @@
   "scripts": {
     "start": "npx ow-electron main.js",
     "pack": "npx ow-electron-builder --dir",
-    "dist": "npm ow-electron-builder"
+    "dist": "npx ow-electron-builder",
+    "build:ow-electron": "ow-electron-builder --publish=never"
   },
   "author": "ian.pieragostini@gmail.com",
   "license": "ISC",
+  "dependencies": {
+    "@overwolf/ow-electron": "^22.3.13"
+  },
   "devDependencies": {
-    "@overwolf/ow-electron": "^22.3.13",
     "@overwolf/ow-electron-builder": "^23.6.2",
     "@overwolf/ow-electron-packages-types": "^0.0.5"
   }
