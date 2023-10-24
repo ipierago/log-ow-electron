@@ -25,32 +25,6 @@ app.on('window-all-closed', function () {
   }
 });
 
-const setupGEPFeatures = async () => {
-  const info = await gep.overwolf.packages.gep.getInfo(21216);
-
-  const features = await app.overwolf.packages.gep.getFeatures(21216);
-  console.log(`features: ${JSON.stringify(features)}`);
-
-  await app.overwolf.packages.gep.setRequiredFeatures(21216, [
-    'gep_internal',
-    'kill',
-    'killed',
-    'killer',
-    'revived',
-    'death',
-    'match',
-    'match_info',
-    'rank',
-    'me',
-    'phase',
-    'location',
-    'team',
-    'items',
-    'counters',
-    'map',
-  ]);
-};
-
 const setupGEP = async () => {
   app.overwolf.packages.gep.on('error', (event, gameId, error, ...args) => {
     console.error(
@@ -96,7 +70,19 @@ const setupGEP = async () => {
   const supportedGames = await app.overwolf.packages.gep.getSupportedGames();
   console.log(`supportedGames: ${JSON.stringify(supportedGames)}`);
 
-  await setupGEPFeatures();
+  for (let i = 0; i < supportedGames.length; i++) {
+    const game = supportedGames[i];
+    const id = game.id;
+
+    const info = await app.overwolf.packages.gep.getInfo(id);
+    console.log(`info: ${JSON.stringify(info)}`);
+
+    const features = await app.overwolf.packages.gep.getFeatures(id);
+    console.log(`features: ${JSON.stringify(features)}`);
+
+    await app.overwolf.packages.gep.setRequiredFeatures(id, null);
+    console.log(`setRequiredFeatures(${id}, null) done`);
+  }
 };
 
 const setupCMP = async () => {

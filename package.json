@@ -11,6 +11,11 @@
   },
   "author": "ian.pieragostini@gmail.com",
   "license": "ISC",
+  "overwolf": {
+    "packages": [
+      "gep"
+    ]
+  },
   "dependencies": {},
   "devDependencies": {
     "@overwolf/ow-electron": "^22.3.13",
