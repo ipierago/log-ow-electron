@@ -25,6 +25,31 @@ app.on('window-all-closed', function () {
   }
 });
 
+const setRequiredFeaturesForSupportedGames = async () => {
+  const supportedGames = await app.overwolf.packages.gep.getSupportedGames();
+  console.log(`supportedGames: ${JSON.stringify(supportedGames)}`);
+
+  for (let i = 0; i < supportedGames.length; i++) {
+    const game = supportedGames[i];
+    const id = game.id;
+
+    setRequiredFeatures(id);
+  }
+};
+
+const setRequiredFeatures = async (id) => {
+  console.log(`setRequiredFeatures(${id})`);
+
+  const info = await app.overwolf.packages.gep.getInfo(id);
+  console.log(`info: ${JSON.stringify(info)}`);
+
+  const features = await app.overwolf.packages.gep.getFeatures(id);
+  console.log(`features: ${JSON.stringify(features)}`);
+
+  await app.overwolf.packages.gep.setRequiredFeatures(id, null);
+  console.log(`setRequiredFeatures(${id}, null) done`);
+};
+
 const setupGEP = async () => {
   app.overwolf.packages.gep.on('error', (event, gameId, error, ...args) => {
     console.error(
@@ -38,10 +63,13 @@ const setupGEP = async () => {
     'game-detected',
     (event, gameId, name, ...args) => {
       console.log(
-        `app.overwolf.packages.getp.on: 'game-detected', gameId: ${gameId}, name: ${name}, args: ${JSON.stringify(
+        `app.overwolf.packages.gep.on: 'game-detected', gameId: ${gameId}, name: ${name}, args: ${JSON.stringify(
           args
         )}`
       );
+      setTimeout(() => {
+        setRequiredFeatures(gameId);
+      }, 3000);
     }
   );
 
@@ -67,22 +95,7 @@ const setupGEP = async () => {
     console.log(`feature: ${feature}, key: ${key}, value: ${value}`);
   });
 
-  const supportedGames = await app.overwolf.packages.gep.getSupportedGames();
-  console.log(`supportedGames: ${JSON.stringify(supportedGames)}`);
-
-  for (let i = 0; i < supportedGames.length; i++) {
-    const game = supportedGames[i];
-    const id = game.id;
-
-    const info = await app.overwolf.packages.gep.getInfo(id);
-    console.log(`info: ${JSON.stringify(info)}`);
-
-    const features = await app.overwolf.packages.gep.getFeatures(id);
-    console.log(`features: ${JSON.stringify(features)}`);
-
-    await app.overwolf.packages.gep.setRequiredFeatures(id, null);
-    console.log(`setRequiredFeatures(${id}, null) done`);
-  }
+  //setRequiredFeaturesForSupportedGames();
 };
 
 const setupCMP = async () => {

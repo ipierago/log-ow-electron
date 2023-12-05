@@ -7,7 +7,8 @@
     "start": "npx ow-electron main.js",
     "pack": "npx ow-electron-builder --dir",
     "dist": "npx ow-electron-builder",
-    "build:ow-electron": "ow-electron-builder --publish=never"
+    "build:ow-electron": "ow-electron-builder --publish=never",
+    "debug:main": "npx ow-electron --inspect-brk main.js"
   },
   "author": "ian.pieragostini@gmail.com",
   "license": "ISC",
@@ -18,10 +19,10 @@
   },
   "dependencies": {},
   "devDependencies": {
-    "@overwolf/ow-electron": "^22.3.13",
+    "@overwolf/ow-electron": "^22.3.26",
     "@overwolf/ow-electron-builder": "^23.6.2",
-    "@overwolf/ow-electron-packages-types": "^0.0.5",
+    "@overwolf/ow-electron-packages-types": "^0.0.6",
     "ts-node": "^10.9.1",
-    "typescript": "^5.2.2"
+    "typescript": "^5.3.2"
   }
 }
