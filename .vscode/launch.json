@@ -5,7 +5,7 @@
   "version": "0.2.0",
   "configurations": [
     {
-      "name": "Attach to Electron",
+      "name": "Attach to Electron:Main",
       "type": "node",
       "request": "attach",
       "port": 9229,
@@ -13,6 +13,13 @@
       "restart": false,
       "sourceMaps": true,
       "timeout": 10000
+    },
+    {
+      "type": "chrome",
+      "request": "attach",
+      "name": "Attach to Electron:Renderer",
+      "port": 9222,
+      "webRoot": "${workspaceFolder}"
     }
   ]
 }

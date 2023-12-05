@@ -8,7 +8,8 @@
     "pack": "npx ow-electron-builder --dir",
     "dist": "npx ow-electron-builder",
     "build:ow-electron": "ow-electron-builder --publish=never",
-    "debug:main": "npx ow-electron --inspect-brk main.js"
+    "debug:main": "npx ow-electron --inspect-brk main.js",
+    "debug:renderer": "npx ow-electron --remote-debugging-port=9222 main.js",
   },
   "author": "ian.pieragostini@gmail.com",
   "license": "ISC",
