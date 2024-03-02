@@ -25,6 +25,7 @@ app.on('window-all-closed', function () {
   }
 });
 
+/*
 const setRequiredFeaturesForSupportedGames = async () => {
   const supportedGames = await app.overwolf.packages.gep.getSupportedGames();
   console.log(`supportedGames: ${JSON.stringify(supportedGames)}`);
@@ -36,21 +37,92 @@ const setRequiredFeaturesForSupportedGames = async () => {
     setRequiredFeatures(id);
   }
 };
+*/
 
 const setRequiredFeatures = async (id) => {
   console.log(`setRequiredFeatures(${id})`);
 
+  /*
+  const gameIdToFeatures = new Map([[7314, // dota2  
+  [
+    'gep_internal',
+    'game_state',
+    'game_state_changed',
+    'match_state_changed',
+    'match_detected',
+    'daytime_changed',
+    'clock_time_changed',
+    'ward_purchase_cooldown_changed',
+    'match_ended',
+    'kill',
+    'assist',
+    'death',
+    'cs',
+    'xpm',
+    'gpm',
+    'gold',
+    'hero_leveled_up',
+    'hero_respawned',
+    'hero_buyback_info_changed',
+    'hero_boughtback',
+    'hero_health_mana_info',
+    'hero_status_effect_changed',
+    'hero_attributes_skilled',
+    'hero_ability_skilled',
+    'hero_ability_used',
+    'hero_ability_cooldown_changed',
+    'hero_ability_changed',
+    'hero_item_cooldown_changed',
+    'hero_item_changed',
+    'hero_item_used',
+    'hero_item_consumed',
+    'hero_item_charged',
+    'match_info',
+    'roster',
+    'party',
+    'error',
+    'hero_pool',
+    'me',
+    'game',
+  ]],
+  [
+    21216, // fortnite
+    [
+      'gep_internal',
+      'kill',
+      'killed',
+      'killer',
+      'revived',
+      'death',
+      'match',
+      'match_info',
+      'rank',
+      'me',
+      'phase',
+      'location',
+      'team',
+      'items',
+      'counters',
+      'map',
+  ]]]);
+  */
+
   const info = await app.overwolf.packages.gep.getInfo(id);
   console.log(`info: ${JSON.stringify(info)}`);
 
-  const features = await app.overwolf.packages.gep.getFeatures(id);
-  console.log(`features: ${JSON.stringify(features)}`);
+  const getFeaturesResult = await app.overwolf.packages.gep.getFeatures(id);
+  console.log(`features: ${JSON.stringify(getFeaturesResult)}`);
 
-  await app.overwolf.packages.gep.setRequiredFeatures(id, null);
-  console.log(`setRequiredFeatures(${id}, null) done`);
+  const features = null; //gameIdToFeatures.get(id);
+
+  const res = await app.overwolf.packages.gep.setRequiredFeatures(id, features);
+  console.log(`app.overwolf.packages.gep.setRequiredFeatures(${id}, ${features}) done (${res})`);
 };
 
 const setupGEP = async () => {
+  const supportedGames = await app.overwolf.packages.gep.getSupportedGames();
+  console.log(`app.overwolf.packages.gep.getSupportedGames() returned: ${JSON.stringify(supportedGames)}`);
+
   app.overwolf.packages.gep.on('error', (event, gameId, error, ...args) => {
     console.error(
       `app.overwolf.packages.gep.on: 'error', error: ${error}, args: ${JSON.stringify(
@@ -67,6 +139,7 @@ const setupGEP = async () => {
           args
         )}`
       );
+      event.enable();
       setTimeout(() => {
         setRequiredFeatures(gameId);
       }, 3000);
@@ -92,7 +165,7 @@ const setupGEP = async () => {
       )}`
     );
     const { feature, key, value } = data;
-    console.log(`feature: ${feature}, key: ${key}, value: ${value}`);
+    console.log(`feature: ${feature}, key: ${key}, value: ${JSON.stringify(value)}`);
   });
 
   //setRequiredFeaturesForSupportedGames();

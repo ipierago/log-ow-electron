@@ -4,12 +4,12 @@
   "description": "",
   "main": "main.js",
   "scripts": {
-    "start": "npx ow-electron main.js",
+    "start": "npx ow-electron --owepm-packages-url=https://electronapi-qa.overwolf.com/packages main.js",
     "pack": "npx ow-electron-builder --dir",
     "dist": "npx ow-electron-builder",
     "build:ow-electron": "ow-electron-builder --publish=never",
     "debug:main": "npx ow-electron --inspect-brk main.js",
-    "debug:renderer": "npx ow-electron --remote-debugging-port=9222 main.js",
+    "debug:renderer": "npx ow-electron --remote-debugging-port=9222 main.js"
   },
   "author": "ian.pieragostini@gmail.com",
   "license": "ISC",
@@ -20,9 +20,9 @@
   },
   "dependencies": {},
   "devDependencies": {
-    "@overwolf/ow-electron": "^22.3.26",
-    "@overwolf/ow-electron-builder": "^23.6.2",
-    "@overwolf/ow-electron-packages-types": "^0.0.6",
+    "@overwolf/ow-electron": "22.3.27",
+    "@overwolf/ow-electron-builder": "^24.7.0",
+    "@overwolf/ow-electron-packages-types": "^0.0.8",
     "ts-node": "^10.9.1",
     "typescript": "^5.3.2"
   }
