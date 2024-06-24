@@ -18,7 +18,9 @@
       "gep"
     ]
   },
-  "dependencies": {},
+  "dependencies": {
+    "uuid": "^10.0.0"
+  },
   "devDependencies": {
     "@overwolf/ow-electron": "22.3.27",
     "@overwolf/ow-electron-builder": "^24.7.0",
