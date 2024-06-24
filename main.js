@@ -89,6 +89,21 @@ const setupGEP = async () => {
       }, 3000);
     }
   );
+  
+  const log_it = (category, key, value) => {
+    let parsed = value;
+    if (typeof value === 'string') {
+      try {
+        parsed = JSON.parse(value);
+      } catch (_error) {
+        parsed = value;
+      }
+    }
+    const parsed_log =(typeof parsed === 'object' && parsed !== null) ? JSON.stringify(parsed) : parsed;
+    console.log(
+      `category: ${category}, key: ${key}, typeof value: ${typeof value}, typeof parsed: ${typeof parsed}, parsed_log: ${parsed_log}`
+    );
+  }
 
   app.overwolf.packages.gep.on('new-info-update', (event, gameId, data) => {
     console.log(
@@ -96,10 +111,8 @@ const setupGEP = async () => {
         data
       )}`
     );
-    const { category, feature, key, value } = data;
-    console.log(
-      `category: ${category}, feature: ${feature}, key: ${key}, value: ${value}`
-    );
+    const { category, key, value } = data;
+    log_it(category, key, value);
   });
 
   app.overwolf.packages.gep.on('new-game-event', (event, gameId, data) => {
@@ -108,8 +121,8 @@ const setupGEP = async () => {
         data
       )}`
     );
-    const { feature, key, value } = data;
-    console.log(`feature: ${feature}, key: ${key}, value: ${JSON.stringify(value)}`);
+    const { category, key, value } = data;
+    log_it(category, key, value); 
   });
 };
 
