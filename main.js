@@ -51,7 +51,7 @@ app.on('window-all-closed', function () {
 
 const setRequiredFeatures = async (id) => {
   console.log(`setRequiredFeatures(${id})`);
-
+  
   const info = await app.overwolf.packages.gep.getInfo(id);
   console.log(`info: ${JSON.stringify(info)}`);
 
@@ -61,6 +61,11 @@ const setRequiredFeatures = async (id) => {
   const features = null;
   const res = await app.overwolf.packages.gep.setRequiredFeatures(id, features);
   console.log(`app.overwolf.packages.gep.setRequiredFeatures(${id}, ${features}) done (${res})`);
+  
+  setInterval(async () => {
+    const info = await app.overwolf.packages.gep.getInfo(id);
+    console.log(`app.overwolf.packages.gep.getInfo: ${JSON.stringify(info)}`);
+  }, 5000);  
 };
 
 const setupGEP = async () => {
