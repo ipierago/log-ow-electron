@@ -4,7 +4,7 @@ const os = require('os');
 const { v4: uuidv4 } = require('uuid');
 const path = require('path');
 
-const logFileName = `log_${uuidv4()}.txt`;
+const logFileName = `my_ow_electron_${uuidv4()}.log`;
 const logFilePath = path.join(os.tmpdir(), logFileName);
 const logFileStream = fs.createWriteStream(logFilePath, { flags: 'a' });
 console.log(`Log file: ${logFilePath}`);
@@ -61,12 +61,10 @@ const setRequiredFeatures = async (id) => {
   const features = null;
   const res = await app.overwolf.packages.gep.setRequiredFeatures(id, features);
   console.log(`app.overwolf.packages.gep.setRequiredFeatures(${id}, ${features}) done (${res})`);
-  
-  setInterval(async () => {
-    const info = await app.overwolf.packages.gep.getInfo(id);
-    console.log(`app.overwolf.packages.gep.getInfo: ${JSON.stringify(info)}`);
-  }, 5000);  
+
 };
+
+
 
 const setupGEP = async () => {
   const supportedGames = await app.overwolf.packages.gep.getSupportedGames();
@@ -75,6 +73,14 @@ const setupGEP = async () => {
   app.overwolf.packages.gep.on('error', (event, gameId, error, ...args) => {
     console.error(
       `app.overwolf.packages.gep.on: 'error', error: ${error}, args: ${JSON.stringify(
+        args
+      )}`
+    );
+  });
+
+  app.overwolf.packages.gep.on('game-info-updated', (event, ...args) => {
+    console.error(
+      `app.overwolf.packages.gep.on: 'game-info-updated': args: ${JSON.stringify(
         args
       )}`
     );
@@ -94,38 +100,41 @@ const setupGEP = async () => {
       }, 3000);
     }
   );
-  
-  const log_it = (category, key, value) => {
-    let parsed = value;
-    if (typeof value === 'string') {
-      try {
-        parsed = JSON.parse(value);
-      } catch (_error) {
-        parsed = value;
-      }
+  const deepParse =  (input) => {
+    if (typeof input === "string") {
+        try {
+            input = JSON.parse(input);
+        } catch (e) {
+            return input;
+        }
     }
-    const parsed_log =(typeof parsed === 'object' && parsed !== null) ? JSON.stringify(parsed) : parsed;
-    console.log(
-      `category: ${category}, key: ${key}, typeof value: ${typeof value}, typeof parsed: ${typeof parsed}, parsed_log: ${parsed_log}`
-    );
+    if (Array.isArray(input)) {
+        return input.map(deepParse);
+    }
+    if (input !== null && typeof input === "object") {
+        for (const key in input) {
+            if (input.hasOwnProperty(key)) {
+                input[key] = deepParse(input[key]);
+            }
+        }
+    }
+    return input;
+  }
+
+  const log_it = (in_category, in_key, in_value) => {
+    const parsed = deepParse(in_value);
+    const key = (in_category === in_key) ? in_key : `${in_category}.${in_key}`;
+    const value = (typeof parsed === 'object' && parsed !== null) ? JSON.stringify(parsed) : (typeof parsed === 'string' ? `"${parsed}"` : parsed);
+    const line = `{"key":"${key}", "value":${value}},`;
+    console.log(line);
   }
 
   app.overwolf.packages.gep.on('new-info-update', (event, gameId, data) => {
-    console.log(
-      `app.overwolf.packages.gep.on: 'new-info-update', gameId: ${gameId}, data: ${JSON.stringify(
-        data
-      )}`
-    );
     const { category, key, value } = data;
     log_it(category, key, value);
   });
 
   app.overwolf.packages.gep.on('new-game-event', (event, gameId, data) => {
-    console.log(
-      `app.overwolf.packages.gep.on: 'new-game-event', gameId: ${gameId}, data: ${JSON.stringify(
-        data
-      )}`
-    );
     const { category, key, value } = data;
     log_it(category, key, value); 
   });
