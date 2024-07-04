@@ -15,7 +15,8 @@
   "license": "ISC",
   "overwolf": {
     "packages": [
-      "gep"
+      "gep",
+      "overlay"
     ]
   },
   "dependencies": {

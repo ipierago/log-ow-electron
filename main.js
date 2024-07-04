@@ -61,14 +61,17 @@ const setRequiredFeatures = async (id) => {
   const features = null;
   const res = await app.overwolf.packages.gep.setRequiredFeatures(id, features);
   console.log(`app.overwolf.packages.gep.setRequiredFeatures(${id}, ${features}) done (${res})`);
-
 };
 
-
+let gameFilter;
 
 const setupGEP = async () => {
   const supportedGames = await app.overwolf.packages.gep.getSupportedGames();
   console.log(`app.overwolf.packages.gep.getSupportedGames() returned: ${JSON.stringify(supportedGames)}`);
+
+  gameFilter = {
+    gameIds: supportedGames.map(game => game.id)
+  };
 
   app.overwolf.packages.gep.on('error', (event, gameId, error, ...args) => {
     console.error(
@@ -140,6 +143,51 @@ const setupGEP = async () => {
   });
 };
 
+
+const setupOverlay = async () => {
+
+  await app.overwolf.packages.overlay.registerGames(gameFilter);
+
+  app.overwolf.packages.overlay.on('game-launched', (event, gameInfo) => {
+    console.log( `overlay: game-launched: gameInfo=${JSON.stringify(gameInfo)}`);
+  });
+
+  app.overwolf.packages.overlay.on('game-exit', (gameInfo, wasInjected) => {
+    console.log(`overlay: game-exit: gameInfo=${JSON.stringify(gameInfo)}, wasInjected=${wasInjected}`);
+  });
+
+  app.overwolf.packages.overlay.on('game-injection-error', (gameInfo, error) => {
+    console.log(`overlay: game-injection-error: error=${error}, gameInfo=${JSON.stringify(gameInfo)}`);
+  });
+
+  app.overwolf.packages.overlay.on('game-injected', (gameInfo) => {
+    console.log(`overlay: game-injected: gameInfo=${JSON.stringify(gameInfo)}`);
+  });
+
+  app.overwolf.packages.overlay.on('game-focus-changed', (window, game, focus) => {
+    console.log(`overlay: game-focus-changed: window=${JSON.stringify(window)}, game=${JSON.stringify(
+          game,
+        )}, focus=${JSON.stringify(focus)}`,
+    );
+  });
+
+  app.overwolf.packages.overlay.on('game-window-changed', (window, game, reason) => {
+    console.log(`overlay: game-window-changed: window=${JSON.stringify(window)}, game=${JSON.stringify(
+          game,
+        )}, reason=${JSON.stringify(reason)}`,
+    );
+  });
+
+  app.overwolf.packages.overlay.on('game-input-interception-changed', (info) => {
+    console.log(`overlay: game-input-interception-changed: info=${JSON.stringify(info)}`);
+  });
+
+  app.overwolf.packages.overlay.on('game-input-exclusive-mode-changed', (info) => {
+    console.log(`overlay: game-input-exclusive-mode-changed: info=${JSON.stringify(info)}`);
+  });
+
+}
+
 const setupCMP = async () => {
   const isCMPRequired = await app.overwolf.isCMPRequired();
   console.log(`isCMPRequired: ${isCMPRequired}`);
@@ -177,8 +225,11 @@ const setupOverwolf = async () => {
     );
     if (packageName === 'gep') {
       setupGEP();
+    } else if (packageName === 'overlay') {
+      setupOverlay();
     }
   });
+
   console.log('setupOverwolf done');
 };
 
