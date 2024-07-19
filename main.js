@@ -25,6 +25,14 @@ console.error = (...args) => {
   logFileStream.write(message);
 };
 
+process.on('uncaughtException', (error) => {
+  console.error('Unhandled Exception:', error);
+});
+
+process.on('unhandledRejection', (reason, promise) => {
+  console.error('Unhandled Rejection at:', promise, 'reason:', reason);
+});
+
 let mainWindow;
 
 app.on('ready', function () {
@@ -103,6 +111,14 @@ const setupGEP = async () => {
       }, 3000);
     }
   );
+
+  app.overwolf.packages.gep.on('game-exit',(event, gameId, processName, pid) => {
+    console.log('gep game exit', gameId, processName, pid);
+    console.log(
+      `app.overwolf.packages.gep.on: 'game-exit', gameId: ${gameId}, processName: ${processName}, pid: ${pid}`
+    );
+  });
+
   const deepParse =  (input) => {
     if (typeof input === "string") {
         try {
@@ -146,7 +162,18 @@ const setupGEP = async () => {
 
 const setupOverlay = async () => {
 
-  await app.overwolf.packages.overlay.registerGames(gameFilter);
+  // wait for gameFilter to be set. it is set while processing the ready event from GEP and we can't guarantee the order
+  const gf = await new Promise((resolve) => {
+    const interval = setInterval(() => {
+      if (gameFilter !== undefined) {
+        clearInterval(interval);
+        resolve(gameFilter);
+      }
+    }, 100);
+  });
+  // setup overlay to track all the same games that are supported by GEP
+  const rv1 = await app.overwolf.packages.overlay.registerGames(gf);
+  console.log(`app.overwolf.packages.overlay.registerGames(${JSON.stringify(gf)}) done (${JSON.stringify(rv1)})`);
 
   app.overwolf.packages.overlay.on('game-launched', (event, gameInfo) => {
     console.log( `app.overwolf.packages.overlay.on: 'game-launched', gameInfo=${JSON.stringify(gameInfo)}`);
