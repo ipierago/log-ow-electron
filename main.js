@@ -249,5 +249,6 @@ const setupOverwolf = async () => {
 app.whenReady().then(() => {
   const appID = process.env.OVERWOLF_APP_UID;
   console.log(`AppID: ${appID}`);
+  console.log(`Chromium version: ${process.versions.chrome}`);
   setupOverwolf();
 });
