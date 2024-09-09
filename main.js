@@ -130,14 +130,13 @@ const setupGEP = async () => {
 
   const log_it = (in_category, in_key, in_value) => {
     const parsed = deepParse(in_value);
-    const key = in_category === in_key ? in_key : `${in_category}.${in_key}`;
     const value =
       typeof parsed === 'object' && parsed !== null
         ? JSON.stringify(parsed)
         : typeof parsed === 'string'
           ? `"${parsed}"`
           : parsed;
-    const line = `{"key":"${key}", "value":${value}},`;
+    const line = `{"category":"${in_category}", "key":"${in_key}", "value":${value}},`;
     console.log(line);
   };
 
