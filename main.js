@@ -4,7 +4,7 @@ const os = require('os');
 const { v4: uuidv4 } = require('uuid');
 const path = require('path');
 
-const logFileName = `my_ow_electron_${uuidv4()}.log`;
+const logFileName = `log_ow_electron_${uuidv4()}.log`;
 const logFilePath = path.join(os.tmpdir(), logFileName);
 const logFileStream = fs.createWriteStream(logFilePath, { flags: 'a' });
 console.log(`Log file: ${logFilePath}`);

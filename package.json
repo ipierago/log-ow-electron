@@ -1,10 +1,11 @@
 {
-  "name": "my-ow-electron",
+  "name": "log-ow-electron",
   "version": "1.0.0",
   "description": "",
   "main": "main.js",
   "scripts": {
     "start": "npx ow-electron --owepm-packages-url=https://electronapi-qa.overwolf.com/packages main.js",
+    "start:noqa": "npx ow-electron main.js",
     "pack": "npx ow-electron-builder --dir",
     "dist": "npx ow-electron-builder",
     "build:ow-electron": "ow-electron-builder --publish=never",
@@ -21,14 +22,14 @@
     ]
   },
   "dependencies": {
-    "uuid": "^10.0.0"
+    "uuid": "latest"
   },
   "devDependencies": {
-    "@overwolf/ow-electron": "28.3.7",
-    "@overwolf/ow-electron-builder": "24.13.8",
-    "@overwolf/ow-electron-packages-types": "0.0.12",
-    "prettier": "^3.3.3",
-    "ts-node": "^10.9.2",
-    "typescript": "^5.5.4"
+    "@overwolf/ow-electron": "latest",
+    "@overwolf/ow-electron-builder": "latest",
+    "@overwolf/ow-electron-packages-types": "latest",
+    "prettier": "latest",
+    "ts-node": "latest",
+    "typescript": "latest"
   }
 }
